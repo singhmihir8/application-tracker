@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Reports</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .summary-table {
+            width: 60%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+        .summary-table th, .summary-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .summary-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Job Application Reports</h1>
+
+    <form action="/report" method="GET">
+        <label>Status:</label>
+        <select name="status">
+            <option value="">All</option>
+            <option>Applied</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+        </select>
+
+        <label>Start Date:</label>
+        <input type="date" name="start_date">
+
+        <label>End Date:</label>
+        <input type="date" name="end_date">
+
+        <button type="submit" class="btn">Filter</button>
+    </form>
+
+    <h2>Filtered Results</h2>
+
+    {% if results %}
+        {% for app in results %}
+        <div class="app-entry">
+            <div>
+                <strong>{{ app.company }}</strong> - {{ app.role }} ({{ app.status }})<br>
+                <small>Applied on {{ app.applied_date }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No matching applications found.</p>
+    {% endif %}
+
+    <h2>Application Summary by Status</h2>
+    {% if summary %}
+    <table class="summary-table">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Total Applications</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in summary %}
+            <tr>
+                <td>{{ row.status }}</td>
+                <td>{{ row.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No summary data available.</p>
+    {% endif %}
+
+    <p><a href="/" class="back-link">← Back to Home</a></p>
+</body>
+</html>
